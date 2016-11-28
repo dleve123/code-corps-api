@@ -19,4 +19,10 @@ defmodule CodeCorps.StripePlatformCustomer do
     |> validate_required([:id_from_stripe, :user_id])
     |> assoc_constraint(:user)
   end
+
+  def update_changeset(struct, params) do
+    struct
+    |> cast(params, [:email])
+    |> validate_required([:email])
+  end
 end

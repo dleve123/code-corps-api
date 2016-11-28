@@ -19,4 +19,9 @@ defmodule CodeCorps.StripeConnectCustomer do
     |> unique_constraint(:id_from_stripe)
     |> unique_constraint(:stripe_connect_account_id, name: :index_projects_on_user_id_role_id)
   end
+
+  def update_changeset(struct, params) do
+    struct
+    |> cast(params, [:email])
+  end
 end

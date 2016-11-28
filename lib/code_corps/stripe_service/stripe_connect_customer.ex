@@ -21,9 +21,10 @@ defmodule CodeCorps.StripeService.StripeConnectCustomerService do
 
   defp create(%StripePlatformCustomer{} = platform_customer, %StripeConnectAccount{} = connect_account) do
     attributes = platform_customer |> create_non_stripe_attributes(connect_account)
+    stripe_attributes = create_stripe_attributes(platform_customer)
 
     with {:ok, customer} <-
-           @api.Customer.create(%{}, connect_account: connect_account.id_from_stripe),
+           @api.Customer.create(stripe_attributes, connect_account: connect_account.id_from_stripe),
          {:ok, params} <-
            StripeConnectCustomerAdapter.to_params(customer, attributes)
     do
@@ -47,5 +48,11 @@ defmodule CodeCorps.StripeService.StripeConnectCustomerService do
     |> rename(:id, :stripe_platform_customer_id)
     |> Map.put(:stripe_connect_account_id, connect_account.id)
     |> keys_to_string
+  end
+
+  defp create_stripe_attributes(platform_customer) do
+    platform_customer
+    |> Map.from_struct
+    |> Map.take([:email])
   end
 end

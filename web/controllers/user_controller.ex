@@ -5,6 +5,7 @@ defmodule CodeCorps.UserController do
   import CodeCorps.Helpers.Query, only: [id_filter: 2]
 
   alias CodeCorps.User
+  alias CodeCorps.UserManager
 
   plug :load_and_authorize_resource, model: User, only: [:update]
   plug JaResource
@@ -30,10 +31,9 @@ defmodule CodeCorps.UserController do
     CodeCorps.Analytics.Segment.track({status, model_or_changeset}, :signed_up, conn)
   end
 
-  def handle_update(conn, model, attributes) do
-    model
-    |> User.update_changeset(attributes)
-    |> Repo.update
+  def handle_update(conn, record, attributes) do
+    record
+    |>UserManager.update(attributes)
     |> CodeCorps.Analytics.Segment.track(:updated_profile, conn)
   end
 
