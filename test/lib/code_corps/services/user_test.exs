@@ -1,15 +1,15 @@
-defmodule CodeCorps.UserManagerTest do
+defmodule CodeCorps.Services.UserServiceTest do
   use ExUnit.Case, async: true
 
   use CodeCorps.ModelCase
 
   alias CodeCorps.StripePlatformCustomer
-  alias CodeCorps.UserManager
+  alias CodeCorps.Services.UserService
 
   describe "update/1" do
     test "it just updates the user if there is nothing associated to update" do
       user = insert(:user, email: "mail@mail.com", first_name: "Joe")
-      {:ok, user} = UserManager.update(user, %{email: "changed@mail.com"})
+      {:ok, user} = UserService.update(user, %{email: "changed@mail.com"})
 
       assert user.email == "changed@mail.com"
       assert user.first_name == "Joe"
@@ -17,7 +17,7 @@ defmodule CodeCorps.UserManagerTest do
 
     test "it returns an {:error, changeset} if there are validation errors with the user" do
       user = insert(:user, email: "mail@mail.com")
-      {:error, changeset} = UserManager.update(user, %{email: ""})
+      {:error, changeset} = UserService.update(user, %{email: ""})
 
       refute changeset.valid?
     end
@@ -26,7 +26,7 @@ defmodule CodeCorps.UserManagerTest do
       user = insert(:user, email: "mail@mail.com")
       stripe_platform_customer = insert(:stripe_platform_customer, email: "mail@mail.com", user: user)
 
-      {:ok, user} = UserManager.update(user, %{first_name: "Mark"})
+      {:ok, user} = UserService.update(user, %{first_name: "Mark"})
 
       assert user.first_name == "Mark"
       assert user.email == "mail@mail.com"
@@ -40,7 +40,7 @@ defmodule CodeCorps.UserManagerTest do
       user = insert(:user, email: "mail@mail.com")
       stripe_platform_customer = insert(:stripe_platform_customer, user: user)
 
-      {:ok, user} = UserManager.update(user, %{email: "changed@mail.com"})
+      {:ok, user} = UserService.update(user, %{email: "changed@mail.com"})
 
       assert user.email == "changed@mail.com"
 

@@ -1,4 +1,4 @@
-defmodule CodeCorps.UserManager do
+defmodule CodeCorps.Services.UserService do
   @moduledoc """
   Handles CRUD operations for users.
 
